@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizador de Velas</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        
+        <!-- Card principal -->
+        <div class="card shadow">
+          <div class="card-header bg-success text-white text-center">
+            <h2 class="mb-0">Cotizador de Velas Artesanales</h2>
+          </div>
+          <div class="card-body">
+            
+            <!-- Formulario -->
+            <div class="mb-3">
+              <label for="ceraGramos" class="form-label fw-bold">Cantidad de cera (en gramos):</label>
+              <input type="number" class="form-control" id="ceraGramos" placeholder="Ej: 300">
+            </div>
+
+            <div class="mb-3">
+              <label for="precioFrasco" class="form-label fw-bold">Precio del frasco (en pesos):</label>
+              <input type="number" class="form-control" id="precioFrasco" placeholder="Ej: 2000">
+            </div>
+
+            <div class="text-center">
+              <button class="btn btn-success btn-lg" onclick="calcularCosto()">Calcular</button>
+            </div>
+            
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="card shadow mt-4" id="resultado" style="display:none;">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Resultados del Cálculo</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <p><strong>Costo de cera:</strong> <span class="text-success">$<span id="costoCera"></span></span></p>
+                <p><strong>Costo de esencia (10%):</strong> <span class="text-success">$<span id="costoEsencia"></span></span></p>
+                <p><strong>Costo de pabilo:</strong> <span class="text-success">$950</span></p>
+                <p><strong>Mano de obra:</strong> <span class="text-success">$500</span></p>
+                <p><strong>Gastos indirectos:</strong> <span class="text-success">$500</span></p>
+                <p><strong>Frasco:</strong> <span class="text-success">$<span id="costoFrasco"></span></span></p>
+              </div>
+            </div>
+            <hr>
+            <div class="text-center">
+              <h5><strong>Costo total:</strong> <span class="text-primary">$<span id="costoTotal"></span></span></h5>
+              <h4><strong>Precio de venta (100% utilidad):</strong> <span class="text-danger">$<span id="precioVenta"></span></span></h4>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calcularCosto() {
+      const gramos = parseFloat(document.getElementById('ceraGramos').value);
+      const frasco = parseFloat(document.getElementById('precioFrasco').value);
+
+      if (isNaN(gramos) || gramos <= 0) {
+        alert("Por favor ingresa una cantidad válida de gramos de cera.");
+        return;
+      }
+      if (isNaN(frasco) || frasco < 0) {
+        alert("Por favor ingresa un precio válido para el frasco.");
+        return;
+      }
+
+      const precioCeraKilo = 18000;
+      const precioPabilo = 950;
+      const porcentajeEsencia = 0.10;
+      const precioEsenciaGramo = 100000 / 500; // 100.000 por 500 gramos 
+      const manoObra = 500;
+      const gastosIndirectos = 500;
+
+      const costoCera = (gramos / 1000) * precioCeraKilo;
+      const gramosEsencia = gramos * porcentajeEsencia;
+      const costoEsencia = gramosEsencia * precioEsenciaGramo;
+
+      const costoTotal = costoCera + costoEsencia + precioPabilo + manoObra + gastosIndirectos + frasco;
+      const precioVenta = costoTotal * 2;
+
+      // Función para formatear valores en COP
+      function formatCOP(value) {
+        return new Intl.NumberFormat('es-CO').format(Math.round(value));
+      }
+
+      // Mostrar resultados
+      document.getElementById('costoCera').textContent = formatCOP(costoCera);
+      document.getElementById('costoEsencia').textContent = formatCOP(costoEsencia);
+      document.getElementById('costoFrasco').textContent = formatCOP(frasco);
+      document.getElementById('costoTotal').textContent = formatCOP(costoTotal);
+      document.getElementById('precioVenta').textContent = formatCOP(precioVenta);
+      document.getElementById('resultado').style.display = "block";
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
